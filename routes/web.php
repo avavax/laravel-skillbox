@@ -12,4 +12,4 @@ Route::get('/contacts', 'MessageController@create')->name('contacts');
 Route::post('/contacts', 'MessageController@store')->name('contacts.store');;;
 Route::get('/admin/feedback', 'MessageController@index')->name('admin.feedback');
 
-
+Auth::routes();

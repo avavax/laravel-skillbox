@@ -9,6 +9,10 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth' , ['except' => ['index', 'show']]);
+    }
+
     public function index()
     {
         $posts = Post::where('publication', 1)->with('tags')->latest()->get();
@@ -23,7 +27,17 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $attributes = $this->validatePost();
-        Post::create($attributes);
+        $attributes['author_id'] = auth()->id();
+        $post = Post::create($attributes);
+
+        $tagsToAttach = collect(explode(',', request('tags')))->keyBy(function($item) {return $item;});
+        if ($tagsToAttach) {
+            foreach($tagsToAttach as $tag) {
+                $tag = Tag::firstOrCreate(['name' => $tag]);
+                $post->tags()->attach($tag);
+            }
+        }
+
         return redirect()->route('posts.index');
     }
 
@@ -34,6 +48,7 @@ class PostController extends Controller
 
      public function edit(Post $post)
     {
+        $this->authorize('update', $post);
         return view('posts.edit', compact('post'));
     }
 
@@ -60,6 +75,7 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
+        $this->authorize('update', $post);
         $post->delete();
         return redirect()->route('posts.index');
     }
