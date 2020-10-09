@@ -24,6 +24,8 @@
 <main role="main" class="container">
     <div class="row">
 
+        @include('layout.flash_message')
+
         @yield('content')
 
         @section('sidebar')

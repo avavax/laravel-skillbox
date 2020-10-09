@@ -17,12 +17,6 @@
             </div>
         @endif
 
-        @if(Session::get('message'))
-            <div class="alert alert-success">
-                <p>{{ Session::get('message') }}</p>
-            </div>
-        @endif
-
         <form action="{{ route('contacts.store') }}" method="POST">
             @csrf
             <div class="form-group">

@@ -2,6 +2,7 @@
 
 return [
 
+    'admin_mail' => env('ADMIN_MAIL', 'admin@admin.com'),
     /*
     |--------------------------------------------------------------------------
     | Application Name

@@ -15,7 +15,7 @@ class Post extends Model
     protected static function boot()
     {
         parent::boot();
-        $adminEmail = Config::get('mail.admin_email');
+        $adminEmail = Config::get('app.admin_mail');
 
         static::updated(function($post) use ($adminEmail) {
             \Mail::to($adminEmail)

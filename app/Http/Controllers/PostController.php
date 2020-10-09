@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\PostCreated,
-    App\Post,
+use App\Http\Requests\StoreBlogPost;
+use App\Post,
     App\Tag;
 
 use Illuminate\Http\Request;
@@ -25,10 +25,12 @@ class PostController extends Controller
         return view('posts.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreBlogPost $request)
     {
-        $attributes = $this->validatePost();
+        $attributes = $request->validated();
+
         $attributes['author_id'] = auth()->id();
+        $attributes['publication'] = request()->has('publication');
         $post = Post::create($attributes);
 
         $tagsToAttach = collect(explode(',', request('tags')))->keyBy(function($item) {return $item;});
@@ -53,9 +55,12 @@ class PostController extends Controller
         return view('posts.edit', compact('post'));
     }
 
-    public function update(Post $post)
+    public function update(Post $post, StoreBlogPost $request)
     {
-        $attributes = $this->validatePost(false);
+        $this->authorize('update', $post);
+        $attributes = $request->validated();
+
+        $attributes['publication'] = request()->has('publication');
         $post->update($attributes);
 
         $postTags = $post->tags->keyBy('name');
@@ -78,16 +83,5 @@ class PostController extends Controller
         $this->authorize('update', $post);
         $post->delete();
         return redirect()->route('posts.index');
-    }
-
-    private function validatePost($isCreate = true)
-    {
-        $attributes = $this->validate(request(), [
-            'slug' => ($isCreate ? 'unique:posts,slug' : '') . '|required|regex:/^[a-z0-9_-]+$/i',
-            'title' => 'required|min:5|max:100',
-            'description' => 'required|max:255',
-            'content' => 'required',
-        ]);
-        return array_merge($attributes, ['publication' => request()->has('publication')]);
     }
 }
