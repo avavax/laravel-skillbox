@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Post,
+use App\Mail\PostCreated,
+    App\Post,
     App\Tag;
 
 use Illuminate\Http\Request;
@@ -69,7 +70,6 @@ class PostController extends Controller
         foreach($tagsToDetach as $tag) {
             $post->tags()->detach($tag);
         }
-
         return redirect()->route('posts.index');
     }
 
