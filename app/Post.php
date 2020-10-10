@@ -40,4 +40,20 @@ class Post extends Model
     {
         return $this->belongsToMany(Tag::class);
     }
+
+    public function tagsModify()
+    {
+        $postTags = $this->tags->keyBy('name');
+        $tags = collect(explode(',', request('tags')))->keyBy(function($item) {return $item;});
+        $tagsToAttach = $tags->diffKeys($postTags);
+        $tagsToDetach = $postTags->diffKeys($tags);
+
+        foreach($tagsToAttach as $tag) {
+            $tag = Tag::firstOrCreate(['name' => $tag]);
+            $this->tags()->attach($tag);
+        }
+        foreach($tagsToDetach as $tag) {
+            $this->tags()->detach($tag);
+        }
+    }
 }

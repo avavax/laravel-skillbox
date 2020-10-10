@@ -7,6 +7,7 @@ use App\Post,
     App\Tag;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 class PostController extends Controller
 {
@@ -28,17 +29,12 @@ class PostController extends Controller
     public function store(StoreBlogPost $request)
     {
         $attributes = $request->validated();
-
         $attributes['author_id'] = auth()->id();
         $attributes['publication'] = request()->has('publication');
         $post = Post::create($attributes);
 
-        $tagsToAttach = collect(explode(',', request('tags')))->keyBy(function($item) {return $item;});
-        if ($tagsToAttach) {
-            foreach($tagsToAttach as $tag) {
-                $tag = Tag::firstOrCreate(['name' => $tag]);
-                $post->tags()->attach($tag);
-            }
+        if (request('tags')) {
+            $post->tagsModify();
         }
 
         return redirect()->route('posts.index');
@@ -63,18 +59,10 @@ class PostController extends Controller
         $attributes['publication'] = request()->has('publication');
         $post->update($attributes);
 
-        $postTags = $post->tags->keyBy('name');
-        $tags = collect(explode(',', request('tags')))->keyBy(function($item) {return $item;});
-        $tagsToAttach = $tags->diffKeys($postTags);
-        $tagsToDetach = $postTags->diffKeys($tags);
+        if (request('tags')) {
+            $post->tagsModify();
+        }
 
-        foreach($tagsToAttach as $tag) {
-            $tag = Tag::firstOrCreate(['name' => $tag]);
-            $post->tags()->attach($tag);
-        }
-        foreach($tagsToDetach as $tag) {
-            $post->tags()->detach($tag);
-        }
         return redirect()->route('posts.index');
     }
 

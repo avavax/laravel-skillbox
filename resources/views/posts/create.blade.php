@@ -13,7 +13,7 @@
 
         <form action="{{ route('posts.store') }}" method="POST">
             @csrf
-            @include('posts.form')
+            @include('posts.form', ['post' => new \App\Post()])
         </form>
 
     </div><!-- /.blog-main -->
