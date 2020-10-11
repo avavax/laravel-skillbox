@@ -17,7 +17,7 @@ class Post extends Model
         parent::boot();
         $adminEmail = Config::get('app.admin_mail');
 
-        static::updated(function($post) use ($adminEmail) {
+        /*static::updated(function($post) use ($adminEmail) {
             \Mail::to($adminEmail)
                 ->send(new PostUpdated($post));
         });
@@ -28,7 +28,7 @@ class Post extends Model
         static::deleted(function($post) use ($adminEmail) {
             \Mail::to($adminEmail)
                 ->send(new PostDeleted($post));
-        });
+        });*/
     }
 
     public function getRouteKeyName()
@@ -41,10 +41,14 @@ class Post extends Model
         return $this->belongsToMany(Tag::class);
     }
 
-    public function tagsModify()
+    public function tagsModify($tagsFromRequest)
     {
+        if ($tagsFromRequest) {
+            $tags = collect(explode(',', $tagsFromRequest))->keyBy(function($item) {return $item;});
+        } else {
+            $tags =collect([]);
+        }
         $postTags = $this->tags->keyBy('name');
-        $tags = collect(explode(',', request('tags')))->keyBy(function($item) {return $item;});
         $tagsToAttach = $tags->diffKeys($postTags);
         $tagsToDetach = $postTags->diffKeys($tags);
 

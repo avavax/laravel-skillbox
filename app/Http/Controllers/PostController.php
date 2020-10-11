@@ -34,7 +34,7 @@ class PostController extends Controller
         $post = Post::create($attributes);
 
         if (request('tags')) {
-            $post->tagsModify();
+            $post->tagsModify(request('tags'));
         }
 
         return redirect()->route('posts.index');
@@ -55,13 +55,10 @@ class PostController extends Controller
     {
         $this->authorize('update', $post);
         $attributes = $request->validated();
-
         $attributes['publication'] = request()->has('publication');
-        $post->update($attributes);
 
-        if (request('tags')) {
-            $post->tagsModify();
-        }
+        $post->update($attributes);
+        $post->tagsModify(request('tags'));
 
         return redirect()->route('posts.index');
     }
