@@ -24,9 +24,13 @@
 <main role="main" class="container">
     <div class="row">
 
+        @include('layout.flash_message')
+
         @yield('content')
 
-        @include('layout.sidebar')
+        @section('sidebar')
+            @include('layout.sidebar')
+        @show
 
     </div><!-- /.row -->
 

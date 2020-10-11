@@ -2,14 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Post;
+use App\Http\Requests\StoreBlogPost;
+use App\Post,
+    App\Tag;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 class PostController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth' , ['except' => ['index', 'show']]);
+    }
+
     public function index()
     {
-        $posts = Post::where('publication', 1)->latest()->get();
+        $posts = Post::where('publication', 1)->with('tags')->latest()->get();
         return view('posts.index', compact('posts'));
     }
 
@@ -18,19 +26,18 @@ class PostController extends Controller
         return view('posts.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreBlogPost $request)
     {
-        $post = $this->validate(request(), [
-            'slug' => 'required|unique:posts,slug|regex:/^[a-z0-9_-]+$/i',
-            'title' => 'required|min:5|max:100',
-            'description' => 'required|max:255',
-            'content' => 'required',
-            'publication' =>'',
-        ]);
+        $attributes = $request->validated();
+        $attributes['author_id'] = auth()->id();
+        $attributes['publication'] = request()->has('publication');
+        $post = Post::create($attributes);
 
-        Post::create($post);
+        if (request('tags')) {
+            $post->tagsModify();
+        }
 
-        return redirect()->route('main');
+        return redirect()->route('posts.index');
     }
 
     public function show(Post $post)
@@ -38,18 +45,31 @@ class PostController extends Controller
         return view('posts.show', compact('post'));
     }
 
-     public function edit($id)
+     public function edit(Post $post)
     {
-        //
+        $this->authorize('update', $post);
+        return view('posts.edit', compact('post'));
     }
 
-    public function update(Request $request, $id)
+    public function update(Post $post, StoreBlogPost $request)
     {
-        //
+        $this->authorize('update', $post);
+        $attributes = $request->validated();
+
+        $attributes['publication'] = request()->has('publication');
+        $post->update($attributes);
+
+        if (request('tags')) {
+            $post->tagsModify();
+        }
+
+        return redirect()->route('posts.index');
     }
 
-    public function destroy($id)
+    public function destroy(Post $post)
     {
-        //
+        $this->authorize('update', $post);
+        $post->delete();
+        return redirect()->route('posts.index');
     }
 }

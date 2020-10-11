@@ -2,6 +2,7 @@
 
 return [
 
+    'admin_mail' => env('ADMIN_MAIL', 'admin@admin.com'),
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -174,6 +175,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\TelescopeServiceProvider::class,
 
     ],
 
