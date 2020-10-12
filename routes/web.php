@@ -9,7 +9,13 @@ Route::resource('/posts', 'PostController');
 
 Route::view('/about', 'about.index')->name('about');
 Route::get('/contacts', 'MessageController@create')->name('contacts');
-Route::post('/contacts', 'MessageController@store')->name('contacts.store');;;
-Route::get('/admin/feedback', 'MessageController@index')->name('admin.feedback');
+Route::post('/contacts', 'MessageController@store')->name('contacts.store');;
+
+Route::get('/admin/feedback', 'AdminController@allMessages')->name('admin.feedback')->middleware('admin');
+Route::get('/admin/posts', 'AdminController@allPosts')->name('admin.posts')->middleware('admin');
+Route::patch('/admin/posts/publicate/{post}', 'AdminController@postPublicate')
+    ->name('admin.posts.publicate')
+    ->middleware('admin');
+
 
 Auth::routes();

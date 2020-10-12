@@ -15,9 +15,6 @@
         {!! $post->content !!}
 
         <p><a href="{{ route('posts.index') }}">К списку статей</a></p>
-        @can('update', $post)
-            <p><a href="{{ route('posts.edit', ['post' => $post->slug]) }}">Редактировать</a></p>
-        @endcan
     </div><!-- /.blog-main -->
 
 @endsection

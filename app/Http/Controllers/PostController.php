@@ -23,11 +23,13 @@ class PostController extends Controller
 
     public function create()
     {
+        $this->authorize('create', $post);
         return view('posts.create');
     }
 
     public function store(StoreBlogPost $request)
     {
+        $this->authorize('create', $post);
         $attributes = $request->validated();
         $attributes['author_id'] = auth()->id();
         $attributes['publication'] = request()->has('publication');
