@@ -6,6 +6,7 @@ use App\Http\Requests\StoreBlogPost;
 use App\Post,
     App\Tag;
 
+use App\Services\Pushall;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,13 +24,13 @@ class PostController extends Controller
 
     public function create()
     {
-        $this->authorize('create', $post);
+        $this->authorize('create', Post::class);
         return view('posts.create');
     }
 
-    public function store(StoreBlogPost $request)
+    public function store(StoreBlogPost $request, Pushall $pushall)
     {
-        $this->authorize('create', $post);
+        $this->authorize('create',  Post::class);
         $attributes = $request->validated();
         $attributes['author_id'] = auth()->id();
         $attributes['publication'] = request()->has('publication');
@@ -38,7 +39,7 @@ class PostController extends Controller
         if (request('tags')) {
             $post->tagsModify(request('tags'));
         }
-
+        $this->pushall($post, $pushall);
         return redirect()->route('posts.index');
     }
 
@@ -70,5 +71,14 @@ class PostController extends Controller
         $this->authorize('update', $post);
         $post->delete();
         return redirect()->route('posts.index');
+    }
+
+    private function pushall(Post $post, Pushall $pushall)
+    {
+        $data = [
+            'title' => 'Создана статья',
+            'text' => $post->title,
+        ];
+        $pushall->send($data['title'], $data['text']);
     }
 }

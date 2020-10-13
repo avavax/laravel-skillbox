@@ -5,6 +5,7 @@ namespace App;
 use App\Mail\PostCreated;
 use App\Mail\PostDeleted;
 use App\Mail\PostUpdated;
+use App\Services\Pushall;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 
@@ -15,9 +16,12 @@ class Post extends Model
     protected static function boot()
     {
         parent::boot();
-        $adminEmail = Config::get('app.admin_mail');
 
-        /*static::updated(function($post) use ($adminEmail) {
+        // Отсылка собщений на почту админа
+
+        /* $adminEmail = Config::get('app.admin_mail');
+
+        static::updated(function($post) use ($adminEmail) {
             \Mail::to($adminEmail)
                 ->send(new PostUpdated($post));
         });
@@ -29,7 +33,8 @@ class Post extends Model
             \Mail::to($adminEmail)
                 ->send(new PostDeleted($post));
         });*/
-    }
+
+     }
 
     public function getRouteKeyName()
     {

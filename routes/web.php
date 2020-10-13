@@ -17,5 +17,4 @@ Route::patch('/admin/posts/publicate/{post}', 'AdminController@postPublicate')
     ->name('admin.posts.publicate')
     ->middleware('admin');
 
-
 Auth::routes();

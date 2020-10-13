@@ -10,18 +10,25 @@ class  PostPolicy
 {
     use HandlesAuthorization;
 
-    public function create(User $user, Post $post)
+    public function before($user, $ability)
     {
-        return ($post->author_id == $user->id || $user->isAdmin());
+        if ($user->isAdmin()) {
+            return true;
+        }
+    }
+
+    public function create(User $user)
+    {
+        return auth()->check();
     }
 
     public function update(User $user, Post $post)
     {
-        return ($post->author_id == $user->id || $user->isAdmin());
+        return $post->author_id == $user->id;
     }
 
     public function delete(User $user, Post $post)
     {
-        return ($post->author_id == $user->id || $user->isAdmin());
+        return $post->author_id == $user->id;
     }
 }
