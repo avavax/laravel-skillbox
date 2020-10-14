@@ -5,6 +5,7 @@ namespace App;
 use App\Mail\PostCreated;
 use App\Mail\PostDeleted;
 use App\Mail\PostUpdated;
+use App\Services\Pushall;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 
@@ -15,7 +16,10 @@ class Post extends Model
     protected static function boot()
     {
         parent::boot();
-        $adminEmail = Config::get('app.admin_mail');
+
+        // Отсылка собщений на почту админа
+
+        /* $adminEmail = Config::get('app.admin_mail');
 
         static::updated(function($post) use ($adminEmail) {
             \Mail::to($adminEmail)
@@ -28,8 +32,9 @@ class Post extends Model
         static::deleted(function($post) use ($adminEmail) {
             \Mail::to($adminEmail)
                 ->send(new PostDeleted($post));
-        });
-    }
+        });*/
+
+     }
 
     public function getRouteKeyName()
     {
@@ -41,10 +46,14 @@ class Post extends Model
         return $this->belongsToMany(Tag::class);
     }
 
-    public function tagsModify()
+    public function tagsModify($tagsFromRequest)
     {
+        if ($tagsFromRequest) {
+            $tags = collect(explode(',', $tagsFromRequest))->keyBy(function($item) {return $item;});
+        } else {
+            $tags =collect([]);
+        }
         $postTags = $this->tags->keyBy('name');
-        $tags = collect(explode(',', request('tags')))->keyBy(function($item) {return $item;});
         $tagsToAttach = $tags->diffKeys($postTags);
         $tagsToDetach = $postTags->diffKeys($tags);
 

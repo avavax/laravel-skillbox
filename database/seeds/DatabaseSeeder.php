@@ -1,5 +1,8 @@
 <?php
 
+use App\Post;
+use App\Tag;
+use App\User;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -11,6 +14,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UserSeeder::class);
+        factory(User::class, 2)->create();
+        User::first()->update([
+            'name' => 'admin',
+            'role' => 'admin',
+            'email' => 'admin@admin.com',
+        ]);
+
+        $tagsId = factory(Tag::class, 5)->create()->pluck('id');
+
+        factory(Post::class, 20)->create()->each(function($post) use ($tagsId ) {
+            $tagsId->random(3)->each(function($tag) use ($post) {
+                $post->tags()->attach($tag);
+            });
+        });
     }
 }

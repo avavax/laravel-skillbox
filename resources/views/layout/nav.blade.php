@@ -45,7 +45,16 @@
             <a class="p-2 text-muted" href="{{ route('contacts') }}">Контакты</a>
             @auth
                 <a class="p-2 text-muted" href="{{ route('posts.create') }}">Создать статью</a>
-                <a class="p-2 text-muted" href="{{ route('admin.feedback') }}">Админ. раздел</a>
+                @admin
+                    <a class="p-2 dropdown-toggle" href="#" id="navbarDropdown"
+                       role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Административный раздел
+                    </a>
+                    <div class="dropdown-menu blog-dropdown" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{{ route('admin.feedback') }}">Сообщения</a>
+                        <a class="dropdown-item" href="{{ route('admin.posts') }}">Статьи</a>
+                    </div>
+                @endadmin
             @endauth
         </nav>
     </div>

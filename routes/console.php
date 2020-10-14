@@ -17,3 +17,9 @@ use Illuminate\Support\Facades\Artisan;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->describe('Display an inspiring quote');
+
+Artisan::command('sendMailing', function () {
+    $this->call('mailing:send', [
+        'start_date' => time() - 7 * 24 * 3600,
+    ]);
+})->describe('Send messages for all users about weekly articles');
