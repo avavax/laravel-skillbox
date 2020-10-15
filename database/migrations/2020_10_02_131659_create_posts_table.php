@@ -20,7 +20,7 @@ class CreatePostsTable extends Migration
             $table->string('title');
             $table->text('description');
             $table->text('content');
-            $table->boolean('publication')->default(true);
+            $table->boolean('publication')->default(false);
             $table->timestamps();
             $table->foreign('author_id')->references('id')->on('users');
         });

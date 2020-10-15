@@ -17,6 +17,13 @@ class Post extends Model
     {
         parent::boot();
 
+        // Запись истории изменений
+
+        static::updated(function ($post) {
+            $fields = implode(',', array_diff(array_keys($post->getDirty()), ['updated_at']));
+            $post->history()->attach(auth()->id(), ['changes' => $fields]);
+        });
+
         // Отсылка собщений на почту админа
 
         /* $adminEmail = Config::get('app.admin_mail');
@@ -64,5 +71,12 @@ class Post extends Model
         foreach($tagsToDetach as $tag) {
             $this->tags()->detach($tag);
         }
+    }
+
+    public function history()
+    {
+        return $this->belongsToMany(User::class, 'post_histories')
+            ->withPivot(['changes'])
+            ->withTimestamps();
     }
 }

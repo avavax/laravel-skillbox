@@ -14,7 +14,33 @@
 
         {!! $post->content !!}
 
-        <p><a href="{{ route('posts.index') }}">К списку статей</a></p>
+        <p><a href="{{ route('posts.index') }}">К списку статей</a></p><br>
+
+        @admin
+            @if($post->history->isEmpty())
+                <p>Нет изменений</p>
+            @else
+            <p>История изменений</p>
+            <table class="table">
+                <tr>
+                    <td>Автор изменений</td>
+                    <td>Дата</td>
+                    <td>Изменённые поля</td>
+                </tr>
+                @foreach($post->history as $item)
+                    <tr>
+                        <td>{{ $item->name }}</td>
+                        <td>{{ $item->pivot->created_at->format('Y-m-d H:i') }}</td>
+                        <td>{{ $item->pivot->changes }}</td>
+                    </tr>
+                @endforeach
+            </table>
+            @endif
+        @endadmin
+
     </div><!-- /.blog-main -->
+
+
+
 
 @endsection

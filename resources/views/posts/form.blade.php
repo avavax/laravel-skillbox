@@ -24,9 +24,5 @@
     <label for="content">Текст статьи</label>
     <textarea class="form-control" id="content" rows="10" name="content">{{ old('content', $post->content) }}</textarea>
 </div>
-<div class="form-group form-check">
-    <input type="checkbox" class="form-check-input"
-           id="publication" name="publication" checked value="1">
-    <label class="form-check-label" for="publication" >Опубликовать</label>
-</div>
+
 <button type="submit" class="btn btn-primary mb-2">Сохранить статью</button>
