@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Message;
+use App\News;
 use App\Post;
 use Illuminate\Http\Request;
 
@@ -12,6 +13,12 @@ class AdminController extends Controller
     {
         $posts = Post::with('tags')->latest()->get();
         return view('admin.posts', compact('posts'));
+    }
+
+    public function allNews()
+    {
+        $news = News::latest()->get();
+        return view('admin.news', compact('news'));
     }
 
     public function allMessages()

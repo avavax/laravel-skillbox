@@ -1,5 +1,6 @@
 <?php
 
+use App\News;
 use App\Post;
 use App\Tag;
 use App\User;
@@ -22,6 +23,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $tagsId = factory(Tag::class, 5)->create()->pluck('id');
+
+        factory(News::class, 10)->create();
 
         factory(Post::class, 20)->create()->each(function($post) use ($tagsId ) {
             $tagsId->random(3)->each(function($tag) use ($post) {
