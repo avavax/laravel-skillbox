@@ -56,6 +56,7 @@
                         <a class="dropdown-item" href="{{ route('admin.posts') }}">Статьи</a>
                         <a class="dropdown-item" href="{{ route('admin.news') }}">Новости</a>
                         <a class="dropdown-item" href="{{ route('news.create') }}">Создать новость</a>
+                        <a class="dropdown-item" href="{{ route('admin.statistics') }}">Статистика сайта</a>
                     </div>
                 @endadmin
             @endauth

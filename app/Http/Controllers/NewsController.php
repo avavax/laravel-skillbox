@@ -21,12 +21,10 @@ class NewsController extends Controller
         return view('news.index', compact('news'));
     }
 
-
     public function create()
     {
         return view('news.create');
     }
-
 
     public function store(StoreBlogNews $request)
     {
@@ -39,18 +37,15 @@ class NewsController extends Controller
         return redirect()->route('news.index');
     }
 
-
     public function show(News $news)
     {
         return view('news.show', compact('news'));
     }
 
-
     public function edit(News $news)
     {
         return view('news.edit', compact('news'));
     }
-
 
     public function update(StoreBlogNews $request, News $news)
     {

@@ -40,7 +40,6 @@ class Post extends Model
             \Mail::to($adminEmail)
                 ->send(new PostDeleted($post));
         });*/
-
      }
 
     public function getRouteKeyName()
