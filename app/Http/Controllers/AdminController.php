@@ -36,7 +36,6 @@ class AdminController extends Controller
 
     public function statistics()
     {
-
         $data = [
             'postsCount' => DB::table('posts')->count(),
             'newsCount' => DB::table('news')->count(),

@@ -17,7 +17,7 @@ class NewsController extends Controller
 
     public function index()
     {
-        $news = News::latest()->get();
+        $news = News::latest()->simplePaginate(config('app.itemsOnPage'));
         return view('news.index', compact('news'));
     }
 

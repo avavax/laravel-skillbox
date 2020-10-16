@@ -3,6 +3,7 @@
 return [
 
     'admin_mail' => env('ADMIN_MAIL', 'admin@admin.com'),
+    'itemsOnPage' => env('ITEMS_ON_PAGE', 10),
     /*
     |--------------------------------------------------------------------------
     | Application Name

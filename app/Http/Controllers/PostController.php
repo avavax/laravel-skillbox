@@ -18,7 +18,7 @@ class PostController extends Controller
 
     public function index()
     {
-        $posts = Post::where('publication', 1)->with('tags')->latest()->get();
+        $posts = Post::where('publication', 1)->with('tags')->latest()->simplePaginate(config('app.itemsOnPage'));
         return view('posts.index', compact('posts'));
     }
 
