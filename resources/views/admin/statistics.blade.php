@@ -21,10 +21,25 @@
                 {{ $data['minLengthPost']->title  }}
             </a> - {{ $data['minLengthPost']->length  }} знаков</p>
         <p>Среднее количество статей у активных пользователей - {{ $data['avgPosts'] }}</p>
-        <p>Чаще всего изменялась статья:
-            <a href="{{ route('posts.show', ['post' => $data['maxMutablePost']->slug]) }}">
-                {{ $data['maxMutablePost']->title  }}
-            </a></p>
+
+        @if($data['maxMutablePost'])
+            <p>Чаще всего изменялась статья:
+                <a href="{{ route('posts.show', ['post' => $data['maxMutablePost']->slug]) }}">
+                    {{ $data['maxMutablePost']->title  }}
+                </a></p>
+        @else
+            <p>В статьи не вносились изменения</p>
+        @endif
+
+        @if($data['maxCommentablePost'])
+            <p>Самая комментируемая статья:
+                <a href="{{ route('posts.show', ['post' => $data['maxCommentablePost']->slug]) }}">
+                    {{ $data['maxCommentablePost']->title  }}
+                </a></p>
+        @else
+            <p>Комментарии к статьям отсуствуют</p>
+        @endif
+
     </div><!-- /.blog-main -->
 
 @endsection

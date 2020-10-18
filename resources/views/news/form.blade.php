@@ -8,7 +8,14 @@
     <input type="text" class="form-control" id="slug" name="slug"
            value="{{ old('slug', $news->slug) }}">
 </div>
-
+<div class="form-group">
+    <label for="tags">Теги</label>
+    <input type="text"
+           class="form-control"
+           id="tags"
+           name="tags"
+           value="{{ old('tags', $news->tags->pluck('name')->implode(',')) }}">
+</div>
 <div class="form-group">
     <label for="content">Текст новости</label>
     <textarea class="form-control" id="content" rows="10" name="content">{{ old('content', $news->content) }}</textarea>

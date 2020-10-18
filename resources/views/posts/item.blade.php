@@ -2,7 +2,7 @@
     <h2 class="blog-post-title">{{ $post->title }}</h2>
     <p class="blog-post-meta">{{ $post->created_at->format('Y-m-d H:i') }} </p>
 
-    @include('posts.tags', ['tags' => $post->tags])
+    @include('tags.tags', ['tags' => $post->tags])
 
     {{ $post->description }}
 

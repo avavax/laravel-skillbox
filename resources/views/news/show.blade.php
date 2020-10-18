@@ -10,10 +10,23 @@
         </h3>
 
         <p class="blog-post-meta">{{ $news->created_at->format('Y-m-d H:i') }} </p>
+        @include('tags.tags', ['tags' => $news->tags])
 
         {!! $news->content !!}
 
         <br><br><p><a href="{{ route('news.index') }}">К списку новостей</a></p><br>
+
+        <p><strong>Комментарии</strong></p><hr>
+        @forelse($news->comments as $comment)
+            @include('comments.item', ['comment' => $comment])
+        @empty
+            <p>Без комментариев</p>
+        @endforelse
+
+        @auth
+            @include('posts.errors')
+            @include('comments.form', ['id' => $news->id, 'route' => 'news.comments.store'])
+        @endauth
 
     </div><!-- /.blog-main -->
 

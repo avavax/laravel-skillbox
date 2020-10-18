@@ -10,7 +10,7 @@
         </h3>
 
         <p class="blog-post-meta">{{ $post->created_at->format('Y-m-d H:i') }} </p>
-        @include('posts.tags', ['tags' => $post->tags])
+        @include('tags.tags', ['tags' => $post->tags])
 
         {!! $post->content !!}
 
@@ -38,9 +38,18 @@
             @endif
         @endadmin
 
+        <p><strong>Комментарии</strong></p><hr>
+        @forelse($post->comments as $comment)
+            @include('comments.item', ['comment' => $comment])
+        @empty
+             <p>Без комментариев</p>
+        @endforelse
+
+        @auth
+            @include('posts.errors')
+            @include('comments.form', ['id' => $post->id, 'route' => 'posts.comments.store'])
+        @endauth
+
     </div><!-- /.blog-main -->
-
-
-
 
 @endsection

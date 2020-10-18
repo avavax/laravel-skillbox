@@ -21,4 +21,8 @@ Route::patch('/admin/posts/publicate/{post}', 'AdminController@postPublicate')
 Route::get('/admin/statistics', 'AdminController@statistics')->name('admin.statistics')->middleware('admin');
 Route::get('/admin/news', 'AdminController@allNews')->name('admin.news')->middleware('admin');
 
+Route::post('/news/comment/store', 'CommentController@store')->name('news.comments.store')->middleware('auth');
+Route::post('/posts/comment/store', 'CommentController@store')->name('posts.comments.store')->middleware('auth');
+Route::delete('/comment/destroy/{comment}', 'CommentController@destroy')->name('comment.destroy')->middleware('admin');
+
 Auth::routes();

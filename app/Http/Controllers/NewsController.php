@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBlogNews;
 use App\News;
-use App\Post;
-use App\Services\Pushall;
 use Illuminate\Http\Request;
 
 class NewsController extends Controller
@@ -31,9 +29,9 @@ class NewsController extends Controller
         $attributes = $request->validated();
         $news = News::create($attributes);
 
-        /*if (request('tags')) {
-            $post->tagsModify(request('tags'));
-        }*/
+        if (request('tags')) {
+            (new \App\Tag())->tagsModify($news, request('tags'));
+        }
         return redirect()->route('news.index');
     }
 
@@ -51,7 +49,7 @@ class NewsController extends Controller
     {
         $attributes = $request->validated();
         $news->update($attributes);
-        //$news->tagsModify(request('tags'));
+        (new \App\Tag())->tagsModify($news, request('tags'));
         return redirect()->route('news.index');
     }
 

@@ -17,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         view()->composer('layout.sidebar', function($view) {
-            $view->with('tagsCloud', Tag::has('posts')->get());
+            $view->with('tagsCloud', Tag::has('posts')->get()->merge(Tag::has('news')->get()));
         });
     }
 

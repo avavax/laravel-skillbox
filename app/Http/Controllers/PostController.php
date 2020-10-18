@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Comment;
+use App\Http\Requests\StoreBlogComment;
 use App\Http\Requests\StoreBlogPost;
 use App\Post,
     App\Tag;
@@ -18,7 +20,7 @@ class PostController extends Controller
 
     public function index()
     {
-        $posts = Post::where('publication', 1)->with('tags')->latest()->simplePaginate(config('app.itemsOnPage'));
+        $posts = Post::where('publication', 1)->with('tags')->with('comments')->latest()->simplePaginate(config('app.itemsOnPage'));
         return view('posts.index', compact('posts'));
     }
 
@@ -36,7 +38,7 @@ class PostController extends Controller
         $post = Post::create($attributes);
 
         if (request('tags')) {
-            $post->tagsModify(request('tags'));
+            (new Tag())->tagsModify($post, request('tags'));
         }
         $this->pushall($post, $pushall);
         return redirect()->route('posts.index');
@@ -58,7 +60,7 @@ class PostController extends Controller
         $this->authorize('update', $post);
         $attributes = $request->validated();
         $post->update($attributes);
-        $post->tagsModify(request('tags'));
+        (new Tag())->tagsModify($post, request('tags'));
 
         return redirect()->route('posts.index');
     }

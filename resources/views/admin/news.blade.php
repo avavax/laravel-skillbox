@@ -24,18 +24,13 @@
                 <tr>
                     <td>{{ $oneNew->id }}</td>
                     <td>{{ $oneNew->title }}</td>
-                    <td></td>
+                    <td>{{ $oneNew->tags->pluck('name')->implode(',') }}</td>
                     <td><a href="{{ route('news.edit', ['news' => $oneNew->slug]) }}">Редактировать</a></td>
                 </tr>
             @endforeach
 
             </tbody>
         </table>
-
-        <nav class="blog-pagination">
-            <a class="btn btn-outline-primary" href="#">Older</a>
-            <a class="btn btn-outline-secondary disabled" href="#">Newer</a>
-        </nav>
 
     </div><!-- /.blog-main -->
 

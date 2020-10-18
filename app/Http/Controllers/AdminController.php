@@ -18,7 +18,7 @@ class AdminController extends Controller
 
     public function allNews()
     {
-        $news = News::latest()->get();
+        $news = News::with('tags')->latest()->get();
         return view('admin.news', compact('news'));
     }
 
@@ -67,11 +67,19 @@ class AdminController extends Controller
                     ->first()->post_id
                 )
                 ->select('slug', 'title')
-                ->first()
-
+                ->first(),
+                'maxCommentablePost' =>DB::table('posts')
+                    ->where('id', DB::table('comments')
+                        ->where('commentable_type', \App\Post::class)
+                        ->select(DB::raw('COUNT(commentable_id) AS counts, commentable_id'))
+                        ->leftJoin('posts', 'comments.commentable_id', '=', 'posts.id')
+                        ->groupBy('commentable_id')
+                        ->orderBy('counts', 'desc')
+                        ->first()->commentable_id
+                    )
+                    ->select('slug', 'title')
+                    ->first()
         ];
-        //dd($data['maxMutablePost']);
-        return view('statistics.index', compact('data'));
+        return view('admin.statistics', compact('data'));
     }
-
 }
