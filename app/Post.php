@@ -63,4 +63,9 @@ class Post extends Model
             ->withPivot(['changes'])
             ->withTimestamps();
     }
+
+    public function getContentLengthAttribute()
+    {
+        return mb_strlen($this->content);
+    }
 }

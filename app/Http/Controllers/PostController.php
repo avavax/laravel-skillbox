@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Comment;
-use App\Http\Requests\StoreBlogComment;
 use App\Http\Requests\StoreBlogPost;
 use App\Post,
     App\Tag;
 
 use App\Services\Pushall;
+use App\Services\TagService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,7 +29,7 @@ class PostController extends Controller
         return view('posts.create');
     }
 
-    public function store(StoreBlogPost $request, Pushall $pushall)
+    public function store(StoreBlogPost $request, Pushall $pushall, TagService $tagService)
     {
         $this->authorize('create',  Post::class);
         $attributes = $request->validated();
@@ -38,7 +37,7 @@ class PostController extends Controller
         $post = Post::create($attributes);
 
         if (request('tags')) {
-            (new Tag())->tagsModify($post, request('tags'));
+            $tagService->modify($post, request('tags'));
         }
         $this->pushall($post, $pushall);
         return redirect()->route('posts.index');
@@ -55,12 +54,12 @@ class PostController extends Controller
         return view('posts.edit', compact('post'));
     }
 
-    public function update(Post $post, StoreBlogPost $request)
+    public function update(Post $post, StoreBlogPost $request, TagService $tagService)
     {
         $this->authorize('update', $post);
         $attributes = $request->validated();
         $post->update($attributes);
-        (new Tag())->tagsModify($post, request('tags'));
+        $tagService->modify($post, request('tags'));
 
         return redirect()->route('posts.index');
     }

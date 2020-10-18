@@ -11,15 +11,15 @@
 
         <p>Общее количество статей - {{ $data['postsCount'] }}</p>
         <p>Общее количество новостей - {{ $data['newsCount']  }}</p>
-        <p>Автор, у которого больше всего новостей - {{ $data['maxPostsAuthor']  }}</p>
+        <p>Автор, у которого больше всего статей - {{ $data['maxPostsAuthor']->name  }}</p>
         <p>Самая длинная статья:
             <a href="{{ route('posts.show', ['post' => $data['maxLengthPost']->slug]) }}">
                 {{ $data['maxLengthPost']->title  }}
-            </a> - {{ $data['maxLengthPost']->length  }} знаков</p>
+            </a> - {{ $data['maxLengthPost']->content_length  }} знаков</p>
         <p>Самая короткая статья:
             <a href="{{ route('posts.show', ['post' => $data['minLengthPost']->slug]) }}">
                 {{ $data['minLengthPost']->title  }}
-            </a> - {{ $data['minLengthPost']->length  }} знаков</p>
+            </a> - {{ $data['minLengthPost']->content_length  }} знаков</p>
         <p>Среднее количество статей у активных пользователей - {{ $data['avgPosts'] }}</p>
 
         @if($data['maxMutablePost'])

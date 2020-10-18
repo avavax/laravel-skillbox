@@ -13,8 +13,8 @@ class Comment extends Model
         return $this->morphTo();
     }
 
-    public function authorName()
+    public function user()
     {
-        return User::where('id', $this->author_id)->pluck('name')->first();
+        return $this->belongsTo('App\User', 'author_id');
     }
 }

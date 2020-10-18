@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBlogNews;
 use App\News;
+use App\Services\TagService;
 use Illuminate\Http\Request;
 
 class NewsController extends Controller
@@ -24,13 +25,13 @@ class NewsController extends Controller
         return view('news.create');
     }
 
-    public function store(StoreBlogNews $request)
+    public function store(StoreBlogNews $request, TagService $tagService)
     {
         $attributes = $request->validated();
         $news = News::create($attributes);
 
         if (request('tags')) {
-            (new \App\Tag())->tagsModify($news, request('tags'));
+            $tagService->modify($news, request('tags'));
         }
         return redirect()->route('news.index');
     }
@@ -45,11 +46,11 @@ class NewsController extends Controller
         return view('news.edit', compact('news'));
     }
 
-    public function update(StoreBlogNews $request, News $news)
+    public function update(StoreBlogNews $request, News $news, TagService $tagService)
     {
         $attributes = $request->validated();
         $news->update($attributes);
-        (new \App\Tag())->tagsModify($news, request('tags'));
+        $tagService->modify($news, request('tags'));
         return redirect()->route('news.index');
     }
 

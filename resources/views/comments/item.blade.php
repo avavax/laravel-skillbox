@@ -1,6 +1,6 @@
 <div class="row alert alert-warning mb-3">
     <div class="col-3">
-        <p>{{ $comment->authorName() }}</p>
+        <p>{{ $comment->user->name }}</p>
         <small>{{ $comment->created_at->format('Y-m-i H:i') }}</small>
     </div>
     <div class="col-9">
