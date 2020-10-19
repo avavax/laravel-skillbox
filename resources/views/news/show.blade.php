@@ -25,7 +25,7 @@
 
         @auth
             @include('posts.errors')
-            @include('comments.form', ['id' => $news->id, 'route' => 'news.comments.store'])
+            @include('comments.form', ['id' => $news->id, 'route' => 'news.comment.store'])
         @endauth
 
     </div><!-- /.blog-main -->

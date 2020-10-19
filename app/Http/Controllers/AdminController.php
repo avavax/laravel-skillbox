@@ -37,14 +37,13 @@ class AdminController extends Controller
 
     public function statistics()
     {
-        $posts = Post::get();
         $data = [
-            'postsCount' => $posts->count(),
+            'postsCount' => Post::count(),
             'newsCount' => News::count(),
             'maxPostsAuthor' => User::withCount('posts')->orderBy('posts_count', 'desc')->first(),
-            'maxLengthPost' => $posts->sortByDesc('content_length')->first(),
-            'minLengthPost' => $posts->sortBy('content_length')->first(),
-            'avgPosts' => User::withCount('posts')->get()->where('posts_count', '>', 1)->pluck('posts_count')->avg(),
+            'maxLengthPost' => Post::OrderByRaw('LENGTH(content) DESC')->first(),
+            'minLengthPost' => Post::OrderByRaw('LENGTH(content)')->first(),
+            'avgPosts' => User::withCount('posts')->having('posts_count', '>', 1)->get()->avg('posts_count'),
             'maxMutablePost' => Post::withCount('history')->orderBy('history_count', 'desc')->first(),
             'maxCommentablePost' => Post::withCount('comments')->orderBy('comments_count', 'desc')->first(),
         ];

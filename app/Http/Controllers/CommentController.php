@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Comment;
-use Illuminate\Http\Request;
+use App\Http\Requests\StoreBlogComments;
+use App\Services\CommentService;
 
 class CommentController extends Controller
 {
@@ -11,25 +12,17 @@ class CommentController extends Controller
         $this->middleware('auth');
     }
 
-    public function storeFromPost(Request $request)
+    public function storeFromPost($id, StoreBlogComments $request, CommentService $commentService)
     {
-        $attributes = $request->validate([
-            'content' => 'required',
-            'commentable_id' => 'exists:posts,id',
-        ]);
-
-        $this->store($attributes, \App\Post::class);
+        $attributes = $request->validated();
+        $commentService->store($id, $attributes, \App\Post::class);
         return back();
     }
 
-    public function storeFromNews(Request $request)
+    public function storeFromNews($id, StoreBlogComments $request, CommentService $commentService)
     {
-        $attributes = $request->validate([
-            'content' => 'required',
-            'commentable_id' => 'exists:news,id',
-        ]);
-
-        $this->store($attributes, \App\News::class);
+        $attributes = $request->validated();
+        $commentService->store($id, $attributes, \App\News::class);
         return back();
     }
 
@@ -38,14 +31,4 @@ class CommentController extends Controller
         $comment->delete();
         return back();
     }
-
-    private function store(array $attributes, string $type)
-    {
-        $attributes = array_merge($attributes, [
-            'author_id' => auth()->id(),
-            'commentable_type' => $type,
-        ]);
-        Comment::create($attributes);
-    }
-
 }

@@ -1,4 +1,4 @@
-<form action="{{ route($route) }}" method="POST">
+<form action="{{ route($route, ['id' => $id]) }}" method="POST">
     @csrf
 
     <div class="form-group">
