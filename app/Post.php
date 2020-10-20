@@ -17,6 +17,13 @@ class Post extends Model
     {
         parent::boot();
 
+        // Запись истории изменений
+
+        static::updated(function ($post) {
+            $fields = implode(',', array_diff(array_keys($post->getDirty()), ['updated_at']));
+            $post->history()->attach(auth()->id(), ['changes' => $fields]);
+        });
+
         // Отсылка собщений на почту админа
 
         /* $adminEmail = Config::get('app.admin_mail');
@@ -33,7 +40,6 @@ class Post extends Model
             \Mail::to($adminEmail)
                 ->send(new PostDeleted($post));
         });*/
-
      }
 
     public function getRouteKeyName()
@@ -43,26 +49,23 @@ class Post extends Model
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class);
+        return $this->morphToMany(Tag::class, 'taggable');
     }
 
-    public function tagsModify($tagsFromRequest)
+    public function comments()
     {
-        if ($tagsFromRequest) {
-            $tags = collect(explode(',', $tagsFromRequest))->keyBy(function($item) {return $item;});
-        } else {
-            $tags =collect([]);
-        }
-        $postTags = $this->tags->keyBy('name');
-        $tagsToAttach = $tags->diffKeys($postTags);
-        $tagsToDetach = $postTags->diffKeys($tags);
+        return $this->morphMany(Comment::class, 'commentable');
+    }
 
-        foreach($tagsToAttach as $tag) {
-            $tag = Tag::firstOrCreate(['name' => $tag]);
-            $this->tags()->attach($tag);
-        }
-        foreach($tagsToDetach as $tag) {
-            $this->tags()->detach($tag);
-        }
+    public function history()
+    {
+        return $this->belongsToMany(User::class, 'post_histories')
+            ->withPivot(['changes'])
+            ->withTimestamps();
+    }
+
+    public function getContentLengthAttribute()
+    {
+        return mb_strlen($this->content);
     }
 }

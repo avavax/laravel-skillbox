@@ -25,7 +25,7 @@
                 <tr>
                     <td>{{ $post->id }}</td>
                     <td>{{ $post->title }}</td>
-                    <td>@include('posts.tags', ['tags' => $post->tags])</td>
+                    <td>@include('tags.tags', ['tags' => $post->tags])</td>
                     <td>
                         <form action="{{ route('admin.posts.publicate', ['post' => $post->slug]) }}" method="POST">
                             @csrf
@@ -46,11 +46,6 @@
 
             </tbody>
         </table>
-
-        <nav class="blog-pagination">
-            <a class="btn btn-outline-primary" href="#">Older</a>
-            <a class="btn btn-outline-secondary disabled" href="#">Newer</a>
-        </nav>
 
     </div><!-- /.blog-main -->
 

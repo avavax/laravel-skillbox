@@ -16,4 +16,14 @@ class User extends Authenticatable
     {
         return $this->role == 'admin';
     }
+
+    public function posts()
+    {
+        return $this->hasMany('App\Post', 'author_id');
+    }
+
+    public function postHistory()
+    {
+        return $this->hasMany(PostHistory::class);
+    }
 }

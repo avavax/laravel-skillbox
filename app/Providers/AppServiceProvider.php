@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Tag;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 
@@ -16,7 +17,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         view()->composer('layout.sidebar', function($view) {
-            $view->with('tagsCloud', Tag::has('posts')->get());
+            $view->with('tagsCloud', Tag::has('posts')->orHas('news')->get());
         });
     }
 
@@ -30,5 +31,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::if('admin', function() {
             return auth()->check() && auth()->user()->isAdmin();
         });
+
+        Paginator::defaultSimpleView('pagination::simple-default');
     }
 }

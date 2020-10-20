@@ -1,21 +1,21 @@
 @extends('layout.master')
 
-@section('title', 'Главная')
+@section('title', 'Новости')
 
 @section('content')
 
     <div class="col-md-8 blog-main">
         <h3 class="pb-3 mb-4 font-italic border-bottom">
-           Все статьи блога
+            Последние новости
         </h3>
 
-        @foreach($posts as $post)
+        @foreach($news as $oneNew)
 
-            @include('posts.item')
+            @include('news.item')
 
         @endforeach
 
-        {{ $posts->links() }}
+        {{ $news->links() }}
 
     </div><!-- /.blog-main -->
 

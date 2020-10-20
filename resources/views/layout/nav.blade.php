@@ -41,6 +41,7 @@
     <div class="nav-scroller py-1 mb-2">
         <nav class="nav d-flex justify-content-between">
             <a class="p-2 text-muted" href="{{ route('posts.index') }}">Главная</a>
+            <a class="p-2 text-muted" href="{{ route('news.index') }}">Новости</a>
             <a class="p-2 text-muted" href="{{ route('about') }}">О нас</a>
             <a class="p-2 text-muted" href="{{ route('contacts') }}">Контакты</a>
             @auth
@@ -53,6 +54,9 @@
                     <div class="dropdown-menu blog-dropdown" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="{{ route('admin.feedback') }}">Сообщения</a>
                         <a class="dropdown-item" href="{{ route('admin.posts') }}">Статьи</a>
+                        <a class="dropdown-item" href="{{ route('admin.news') }}">Новости</a>
+                        <a class="dropdown-item" href="{{ route('news.create') }}">Создать новость</a>
+                        <a class="dropdown-item" href="{{ route('admin.statistics') }}">Статистика сайта</a>
                     </div>
                 @endadmin
             @endauth

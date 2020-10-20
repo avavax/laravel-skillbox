@@ -7,6 +7,7 @@ use App\Post,
     App\Tag;
 
 use App\Services\Pushall;
+use App\Services\TagService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,7 +19,7 @@ class PostController extends Controller
 
     public function index()
     {
-        $posts = Post::where('publication', 1)->with('tags')->latest()->get();
+        $posts = Post::where('publication', 1)->with('tags')->with('comments')->latest()->simplePaginate(config('app.itemsOnPage'));
         return view('posts.index', compact('posts'));
     }
 
@@ -28,16 +29,15 @@ class PostController extends Controller
         return view('posts.create');
     }
 
-    public function store(StoreBlogPost $request, Pushall $pushall)
+    public function store(StoreBlogPost $request, Pushall $pushall, TagService $tagService)
     {
         $this->authorize('create',  Post::class);
         $attributes = $request->validated();
         $attributes['author_id'] = auth()->id();
-        $attributes['publication'] = request()->has('publication');
         $post = Post::create($attributes);
 
         if (request('tags')) {
-            $post->tagsModify(request('tags'));
+            $tagService->modify($post, request('tags'));
         }
         $this->pushall($post, $pushall);
         return redirect()->route('posts.index');
@@ -54,14 +54,12 @@ class PostController extends Controller
         return view('posts.edit', compact('post'));
     }
 
-    public function update(Post $post, StoreBlogPost $request)
+    public function update(Post $post, StoreBlogPost $request, TagService $tagService)
     {
         $this->authorize('update', $post);
         $attributes = $request->validated();
-        $attributes['publication'] = request()->has('publication');
-
         $post->update($attributes);
-        $post->tagsModify(request('tags'));
+        $tagService->modify($post, request('tags'));
 
         return redirect()->route('posts.index');
     }
