@@ -47,16 +47,17 @@
             @auth
                 <a class="p-2 text-muted" href="{{ route('posts.create') }}">Создать статью</a>
                 @admin
-                    <a class="p-2 dropdown-toggle" href="#" id="navbarDropdown"
+                    <a class="p-2 dropdown-toggle" href="#" id="navbarDropdownMenuLink"
                        role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Административный раздел
                     </a>
-                    <div class="dropdown-menu blog-dropdown" aria-labelledby="navbarDropdown">
+                    <div class="dropdown-menu blog-dropdown" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" href="{{ route('admin.feedback') }}">Сообщения</a>
                         <a class="dropdown-item" href="{{ route('admin.posts') }}">Статьи</a>
                         <a class="dropdown-item" href="{{ route('admin.news') }}">Новости</a>
                         <a class="dropdown-item" href="{{ route('news.create') }}">Создать новость</a>
                         <a class="dropdown-item" href="{{ route('admin.statistics') }}">Статистика сайта</a>
+                        <a class="dropdown-item" href="{{ route('admin.report') }}">Создание отчёта</a>
                     </div>
                 @endadmin
             @endauth

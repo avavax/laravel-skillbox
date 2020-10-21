@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="/img/favicon.ico">
 
     <title>@yield('title')</title>
@@ -15,6 +15,10 @@
     <!-- Custom styles for this template -->
     <link href="https://fonts.googleapis.com/css?family=Playfair+Display:700,900" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
+
+    <script>
+        const userId = {{ auth()->id() }};
+    </script>
 </head>
 
 <body>
@@ -36,7 +40,7 @@
 
 </main><!-- /.container -->
 
+    <script src="/js/app.js"></script>
     @include('layout.footer')
-
 </body>
 </html>
