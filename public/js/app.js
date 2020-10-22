@@ -60127,9 +60127,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-Echo["private"]('blog_na_laravel_database_post.updated').listen('PostUpdated', function (data) {
-  console.log(data);
-  var message = 'Изменена статья: ' + data.title + '\n ссылка: ' + data.link + '\n поля: '.data.fields;
+Echo["private"]('post.updated').listen('PostUpdated', function (data) {
+  var message = 'Изменена статья: ' + data.title + '\n ссылка: ' + data.link + '\n поля: ' + data.fields;
   alert(message);
 });
 
@@ -60147,7 +60146,8 @@ window.onload = function () {
   };
 
   if (reportElement) {
-    Echo.channel('blog_na_laravel_database_report').listen('ReportSended', function (e) {
+    console.log(reportElement);
+    Echo.channel('report').listen('ReportSended', function (e) {
       reportElement.insertAdjacentHTML('beforeend', reportTable(e.counters));
     });
   }

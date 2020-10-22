@@ -9,7 +9,9 @@
 	],
 	"database": "redis",
 	"databaseConfig": {
-        "redis": {},
+        "redis": {
+            "keyPrefix": "redis_database_"
+        },
 		"sqlite": {
 			"databasePath": "/database/laravel-echo-server.sqlite"
 		}

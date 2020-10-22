@@ -1,8 +1,7 @@
 Echo
-    .private('blog_na_laravel_database_post.updated')
+    .private('post.updated')
     .listen('PostUpdated', data => {
-        console.log(data);
-        const message = 'Изменена статья: ' + data.title + '\n ссылка: ' + data.link + '\n поля: ' . data.fields;
+        const message = 'Изменена статья: ' + data.title + '\n ссылка: ' + data.link + '\n поля: ' + data.fields;
         alert(message);
     });
 
@@ -22,8 +21,9 @@ window.onload = function() {
     }
 
     if (reportElement) {
+        console.log(reportElement)
         Echo
-            .channel('blog_na_laravel_database_report')
+            .channel('report')
             .listen('ReportSended', (e) => {
                 reportElement.insertAdjacentHTML('beforeend', reportTable(e.counters));
             });
