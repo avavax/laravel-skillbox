@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\BlogReport;
 use App\Message;
 use App\News;
 use App\Post;
@@ -48,5 +49,11 @@ class AdminController extends Controller
             'maxCommentablePost' => Post::withCount('comments')->orderBy('comments_count', 'desc')->first(),
         ];
         return view('admin.statistics', compact('data'));
+    }
+
+    public function report(Request $request)
+    {
+        BlogReport::dispatch($request->report_fields, auth()->user()->email);
+        return view('admin.report');
     }
 }

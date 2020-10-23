@@ -22,6 +22,7 @@ class Post extends Model
         static::updated(function ($post) {
             $fields = implode(',', array_diff(array_keys($post->getDirty()), ['updated_at']));
             $post->history()->attach(auth()->id(), ['changes' => $fields]);
+            event(new \App\Events\PostUpdated($post, $fields));
         });
 
         // Отсылка собщений на почту админа
