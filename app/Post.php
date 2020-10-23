@@ -7,6 +7,7 @@ use App\Mail\PostDeleted;
 use App\Mail\PostUpdated;
 use App\Services\Pushall;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 
 class Post extends Model
@@ -17,31 +18,22 @@ class Post extends Model
     {
         parent::boot();
 
-        // Запись истории изменений
-
         static::updated(function ($post) {
             $fields = implode(',', array_diff(array_keys($post->getDirty()), ['updated_at']));
             $post->history()->attach(auth()->id(), ['changes' => $fields]);
             event(new \App\Events\PostUpdated($post, $fields));
+
+            Cache::tags(['posts'])->flush();
         });
 
-        // Отсылка собщений на почту админа
-
-        /* $adminEmail = Config::get('app.admin_mail');
-
-        static::updated(function($post) use ($adminEmail) {
-            \Mail::to($adminEmail)
-                ->send(new PostUpdated($post));
+        static::created(function() {
+            Cache::tags(['posts'])->flush();
         });
-        static::created(function($post) use ($adminEmail) {
-            \Mail::to($adminEmail)
-                ->send(new PostCreated($post));
+
+        static::deleted(function() {
+            Cache::tags(['posts'])->flush();
         });
-        static::deleted(function($post) use ($adminEmail) {
-            \Mail::to($adminEmail)
-                ->send(new PostDeleted($post));
-        });*/
-     }
+    }
 
     public function getRouteKeyName()
     {

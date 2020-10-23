@@ -9,6 +9,7 @@ use App\Post,
 use App\Services\Pushall;
 use App\Services\TagService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 
 class PostController extends Controller
@@ -19,7 +20,14 @@ class PostController extends Controller
 
     public function index()
     {
-        $posts = Post::where('publication', 1)->with('tags')->with('comments')->latest()->simplePaginate(config('app.itemsOnPage'));
+        $posts = Cache::tags(['posts', 'tags', 'comments', 'history'])->remember('posts', 3600, function() {
+            return Post::where('publication', 1)
+                ->with('tags')
+                ->with('comments')
+                ->latest()
+                ->simplePaginate(config('app.itemsOnPage'));
+
+        });
         return view('posts.index', compact('posts'));
     }
 
@@ -45,6 +53,10 @@ class PostController extends Controller
 
     public function show(Post $post)
     {
+        $post = Cache::tags(['posts', 'tags', 'comments', 'history'])
+            ->remember('post|' . $post->id, 3600, function() use ($post) {
+                return $post;
+            });
         return view('posts.show', compact('post'));
     }
 

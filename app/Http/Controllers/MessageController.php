@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Message;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class MessageController extends Controller
 {
@@ -23,11 +24,4 @@ class MessageController extends Controller
 
         return redirect()->route('contacts')->with('message', 'Сообщение успешно отправлено');
     }
-
-    public function index()
-    {
-        $messages = Message::latest()->get();
-        return view('admin.feedback', compact('messages'));
-    }
-
 }
