@@ -2,6 +2,7 @@
 
 return [
 
+    'cacheLifetime' =>env('CACHE_LIFETIME', 3600),
     'admin_mail' => env('ADMIN_MAIL', 'admin@admin.com'),
     'itemsOnPage' => env('ITEMS_ON_PAGE', 10),
     /*

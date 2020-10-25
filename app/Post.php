@@ -6,13 +6,17 @@ use App\Mail\PostCreated;
 use App\Mail\PostDeleted;
 use App\Mail\PostUpdated;
 use App\Services\Pushall;
+use App\Traits\CacheFlushTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
 
 class Post extends Model
 {
+    use CacheFlushTrait;
+
     protected $guarded = [];
+    protected const RELATED_TAGS = ['posts'];
 
     protected static function boot()
     {
@@ -22,16 +26,6 @@ class Post extends Model
             $fields = implode(',', array_diff(array_keys($post->getDirty()), ['updated_at']));
             $post->history()->attach(auth()->id(), ['changes' => $fields]);
             event(new \App\Events\PostUpdated($post, $fields));
-
-            Cache::tags(['posts'])->flush();
-        });
-
-        static::created(function() {
-            Cache::tags(['posts'])->flush();
-        });
-
-        static::deleted(function() {
-            Cache::tags(['posts'])->flush();
         });
     }
 

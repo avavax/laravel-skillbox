@@ -15,23 +15,25 @@ class AdminController extends Controller
 {
     public function allPosts()
     {
-        $posts = Cache::tags(['posts', 'tags'])->remember('admin-posts', 3600, function() {
-            return Post::with('tags')->latest()->get();
-        });
+        $posts = Cache::tags(['posts', 'tags'])
+            ->remember('admin-posts', config('app.cacheLifetime'), function() {
+                return Post::with('tags')->latest()->get();
+            });
         return view('admin.posts', compact('posts'));
     }
 
     public function allNews()
     {
-        $news = Cache::tags(['news', 'tags'])->remember('admin-news', 3600, function() {
-            return News::with('tags')->latest()->get();
-        });
+        $news = Cache::tags(['news', 'tags'])
+            ->remember('admin-news', config('app.cacheLifetime'), function() {
+                return News::with('tags')->latest()->get();
+            });
         return view('admin.news', compact('news'));
     }
 
     public function allMessages()
     {
-        $messages = Cache::tags(['message'])->remember('message', 3600, function() {
+        $messages = Cache::tags(['message'])->remember('message', config('app.cacheLifetime'), function() {
             return Message::latest()->get();
         });
         return view('admin.feedback', compact('messages'));
@@ -46,7 +48,7 @@ class AdminController extends Controller
     public function statistics()
     {
         $data = Cache::tags(['posts', 'news', 'history', 'comments'])
-            ->remember('statistics', 3600, function() {
+            ->remember('statistics', config('app.cacheLifetime'), function() {
                 return [
                     'postsCount' => Post::count(),
                     'newsCount' => News::count(),

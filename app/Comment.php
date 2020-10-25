@@ -2,21 +2,16 @@
 
 namespace App;
 
+use App\Traits\CacheFlushTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
 class Comment extends Model
 {
+    use CacheFlushTrait;
+
     protected $guarded = [];
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::created(function() {
-            Cache::tags(['comments'])->flush();
-        });
-    }
+    protected const RELATED_TAGS = ['comments'];
 
     public function commentable()
     {

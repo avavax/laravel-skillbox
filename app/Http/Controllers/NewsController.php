@@ -17,7 +17,7 @@ class NewsController extends Controller
 
     public function index()
     {
-        $news = Cache::tags(['news', 'tags', 'comments'])->remember('news', 3600, function() {
+        $news = Cache::tags(['news', 'tags', 'comments'])->remember('news', config('app.cacheLifetime'), function() {
             return News::latest()->simplePaginate(config('app.itemsOnPage'));
         });
 
@@ -43,7 +43,7 @@ class NewsController extends Controller
     public function show(News $news)
     {
         $news = Cache::tags(['news', 'tags', 'comments'])
-            ->remember('news|' . $news->id, 3600, function() use ($news) {
+            ->remember('news|' . $news->id, config('app.cacheLifetime'), function() use ($news) {
                 return $news;
             });
         return view('news.show', compact('news'));

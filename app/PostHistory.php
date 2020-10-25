@@ -2,21 +2,16 @@
 
 namespace App;
 
+use App\Traits\CacheFlushTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
 class PostHistory extends Model
 {
+    use CacheFlushTrait;
+
     protected $guarded = [];
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::created(function() {
-            Cache::tags(['history'])->flush();
-        });
-    }
+    protected const RELATED_TAGS = ['history'];
 
     public function user()
     {
