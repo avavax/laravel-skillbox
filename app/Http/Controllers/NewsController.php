@@ -6,6 +6,7 @@ use App\Http\Requests\StoreBlogNews;
 use App\News;
 use App\Services\TagService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class NewsController extends Controller
 {
@@ -16,7 +17,10 @@ class NewsController extends Controller
 
     public function index()
     {
-        $news = News::latest()->simplePaginate(config('app.itemsOnPage'));
+        $news = Cache::tags(['news', 'tags', 'comments'])->remember('news', config('app.cacheLifetime'), function() {
+            return News::latest()->simplePaginate(config('app.itemsOnPage'));
+        });
+
         return view('news.index', compact('news'));
     }
 
@@ -38,6 +42,10 @@ class NewsController extends Controller
 
     public function show(News $news)
     {
+        $news = Cache::tags(['news', 'tags', 'comments'])
+            ->remember('news|' . $news->id, config('app.cacheLifetime'), function() use ($news) {
+                return $news;
+            });
         return view('news.show', compact('news'));
     }
 

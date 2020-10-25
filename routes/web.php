@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'PostController@index')->name('main');
@@ -11,7 +12,7 @@ Route::resource('/news', 'NewsController');
 
 Route::view('/about', 'about.index')->name('about');
 Route::get('/contacts', 'MessageController@create')->name('contacts');
-Route::post('/contacts', 'MessageController@store')->name('contacts.store');;
+Route::post('/contacts', 'MessageController@store')->name('contacts.store');
 
 Route::get('/admin/feedback', 'AdminController@allMessages')->name('admin.feedback')->middleware('admin');
 Route::get('/admin/posts', 'AdminController@allPosts')->name('admin.posts')->middleware('admin');
@@ -35,5 +36,6 @@ Route::get('/clear', function() {
     Artisan::call('config:cache');
     Artisan::call('view:clear');
     Artisan::call('route:clear');
+    Cache::flush();
     return "Кэш очищен.";
 })->middleware('admin');;

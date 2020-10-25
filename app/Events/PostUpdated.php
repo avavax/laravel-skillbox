@@ -23,7 +23,7 @@ class PostUpdated implements ShouldBroadcast
     {
         $this->title = $post->title;
         $this->link = route('posts.show', ['post' => $post->slug]);
-        $this->fields = $fields;
+        $this->fields = $fields ?? '';
     }
 
     public function broadcastOn()
